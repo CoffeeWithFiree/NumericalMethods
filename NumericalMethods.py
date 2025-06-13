@@ -1,4 +1,4 @@
-
+import cmath
 class NumericalMethods:
     @staticmethod
     def DerivativeOneSideDifference(func, x, delta = 0.001):
@@ -24,10 +24,17 @@ class NumericalMethods:
         raise ValueError("The sign-changing interval within max_iter was not found.")
 
     @staticmethod
-    def NewtonMethod(func, delta = 0.01, x = None, max_iter = 1000):
+    def NewtonMethod(func, x = None, delta = 0.01, max_iter = 1000, safe_start = True):
         """algorithm for approximating the roots of real-valued functions"""
         if x is None:
-            x0 = NumericalMethods.FindSignChangeInterval(func)[1]
+            try:
+                x0 = NumericalMethods.FindSignChangeInterval(func)[1]
+            except ValueError:
+                if safe_start:
+                    x0 = 0
+                else:
+                    raise
+
         elif isinstance(x, (tuple, list)):
             x0 = x[1]
         else:
@@ -44,3 +51,28 @@ class NumericalMethods:
             x0 = x1
         raise ValueError("I can't find a solution")
 
+    @staticmethod
+    def MethodHalfDivision(func, x = None, delta = 0.01, max_iter = 1000):
+        """the method of half division (bisection)"""
+        if x is None:
+            interval = NumericalMethods.FindSignChangeInterval(func)
+        else:
+            interval = x
+        for _ in range(max_iter):
+            x0 = (interval[0] + interval[1]) / 2
+
+            fa = func(interval[0])
+            fx = func(x0)
+            if fa * fx < 0:
+                interval = [interval[0], x0]
+            else:
+                fb = func(interval[1])
+                if fx * fb < 0:
+                    interval = [x0, interval[1]]
+                else:
+                    raise ValueError(f"The function does not change the sign on the interval from {interval[0]} to {interval[1]}")
+
+            if abs(interval[1] - interval[0]) < delta:
+                return (interval[0] + interval[1]) / 2
+
+        raise ValueError("I can't find a solution")
