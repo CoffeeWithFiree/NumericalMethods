@@ -76,3 +76,32 @@ class NumericalMethods:
                 return (interval[0] + interval[1]) / 2
 
         raise ValueError("I can't find a solution")
+
+    @staticmethod
+    def SecantMethod(func, x = None, delta = 0.01, max_iter = 1000): ##ПРОВЕРИТЬ
+        if x is None:
+            interval = NumericalMethods.FindSignChangeInterval(func)
+        else:
+            interval = x
+
+        x_prev = interval[0]
+        x_cur = interval[1]
+
+        f_prev = func(x_prev)
+        f_cur = func(x_cur)
+
+        for _ in range(max_iter):
+            denominator = f_cur - f_prev
+            if abs(denominator) < 1e-12:
+                raise ZeroDivisionError("The derivative is too small")
+            x_next = x_cur - f_cur * (x_cur - x_prev) / denominator
+            if abs(x_next - x_cur) < delta:
+                return x_next
+            else:
+                x_prev = x_cur
+                x_cur = x_next
+                f_prev = f_cur
+                f_cur = func(x_cur)
+
+        raise ValueError("I can't find a solution")
+
