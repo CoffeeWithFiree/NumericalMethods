@@ -1,5 +1,5 @@
 import cmath
-class NumericalMethods:
+class NumericalMethodsEquations:
     @staticmethod
     def DerivativeOneSideDifference(func, x, delta = 0.001):
         """Calculating the derivative using the one-way difference method"""
@@ -28,7 +28,7 @@ class NumericalMethods:
         """algorithm for approximating the roots of real-valued functions"""
         if x is None:
             try:
-                x0 = NumericalMethods.FindSignChangeInterval(func)[1]
+                x0 = NumericalMethodsEquations.FindSignChangeInterval(func)[1]
             except ValueError:
                 if safe_start:
                     x0 = 0
@@ -42,7 +42,7 @@ class NumericalMethods:
 
         for _ in range(max_iter):
             fx = func(x0)
-            dfx = NumericalMethods.DerivativeTwoSideDifference(func, x0)
+            dfx = NumericalMethodsEquations.DerivativeTwoSideDifference(func, x0)
             if abs(dfx) < 1e-12:
                 raise ZeroDivisionError("The derivative is too small")
             x1 = x0 - fx / dfx
@@ -55,7 +55,7 @@ class NumericalMethods:
     def MethodHalfDivision(func, x = None, delta = 0.01, max_iter = 1000):
         """the method of half division (bisection)"""
         if x is None:
-            interval = NumericalMethods.FindSignChangeInterval(func)
+            interval = NumericalMethodsEquations.FindSignChangeInterval(func)
         else:
             interval = x
         for _ in range(max_iter):
@@ -80,7 +80,7 @@ class NumericalMethods:
     @staticmethod
     def SecantMethod(func, x = None, delta = 0.01, max_iter = 1000): ##ПРОВЕРИТЬ
         if x is None:
-            interval = NumericalMethods.FindSignChangeInterval(func)
+            interval = NumericalMethodsEquations.FindSignChangeInterval(func)
         else:
             interval = x
 
